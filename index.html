@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envy Family - Official Site</title>
+    
+    <link rel="icon" href="Images/LogoEnvy.jpg" type="image/jpeg">
+
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Noto+Sans+JP:wght@400;700&family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- THEME VARIABLES --- */
+        :root {
+            --envy-green: #00ff88; --envy-purple: #8e44ad; --pop-yellow: #f1c40f; --pop-black: #2d3436; --japan-bg: #f5f6fa;
+            --border-thick: 4px solid var(--pop-black);
+            --halftone: radial-gradient(var(--pop-black) 20%, transparent 20%) 0 0, radial-gradient(var(--pop-black) 20%, transparent 20%) 8px 8px;
+            --halftone-size: 16px 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--pop-black);
+            overflow: hidden; /* ซ่อน Scrollbar ของหน้าเว็บหลัก */
+        }
+
+        /* --- DRAG CONTAINER (ตัวคุมการเลื่อน) --- */
+        .horizontal-container {
+            display: flex; width: 100vw; height: 100vh;
+            overflow-x: auto; overflow-y: hidden;
+            cursor: grab; cursor: -webkit-grab;
+            user-select: none; -webkit-user-select: none;
+            
+            /* Logic การเลื่อน */
+            scroll-snap-type: x mandatory; 
+            will-change: scroll-position;
+            
+            /* ซ่อน Scrollbar */
+            -ms-overflow-style: none; scrollbar-width: none;
+        }
+        .horizontal-container::-webkit-scrollbar { display: none; }
+        .horizontal-container.active { cursor: grabbing; cursor: -webkit-grabbing; }
+
+        /* --- SECTIONS (หน้าแต่ละหน้า) --- */
+        .slide-section {
+            scroll-snap-align: start; scroll-snap-stop: always;
+            flex: 0 0 100vw; height: 100vh; position: relative;
+            padding: 40px; display: flex; flex-direction: column; justify-content: center;
+            background-color: var(--japan-bg); border-right: var(--border-thick);
+            pointer-events: none; 
+        }
+        .slide-section > * { pointer-events: auto; } /* ให้กดปุ่มข้างในได้ */
+
+        /* Typography & Decor */
+        h1, h2, h3 { font-family: 'Bangers', cursive; text-transform: uppercase; letter-spacing: 2px; color: var(--pop-black); text-shadow: 3px 3px 0px var(--envy-green); }
+        h2.section-title {
+            font-size: 4rem; position: absolute; top: 20px; left: 40px; z-index: 10;
+            background: var(--pop-black); color: white; padding: 10px 40px;
+            border: 4px solid var(--envy-green); box-shadow: 8px 8px 0px rgba(0,0,0,0.5); transform: rotate(-2deg);
+        }
+        .jp-pattern-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.15; background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.184 20c.357-.13.72-.264 1.088-.402l1.768-.661C33.64 15.347 39.647 14 50 14c10.271 0 15.362 1.222 24.629 4.928.955.383 1.869.74 2.75 1.072h6.225c-2.51-.73-5.139-1.691-8.233-2.928C65.888 13.278 60.562 12 50 12c-10.626 0-16.855 1.397-26.66 5.063l-1.767.662c-2.475.923-4.66 1.674-6.724 2.275h6.335zm0-20C13.258 2.892 8.077 4 0 4V2c5.744 0 9.951-.574 14.85-2h6.334zM77.38 0C85.239 2.966 90.502 4 100 4V2c-6.842 0-11.386-.542-16.396-2h-6.225zM0 14c8.44 0 13.718-1.21 22.272-4.402l1.768-.661C33.64 5.347 39.647 4 50 4c10.271 0 15.362 1.222 24.629 4.928C84.112 12.722 89.438 14 100 14v-2c-10.626 0-16.855-1.397-26.66-5.063l-1.767.662C61.537 10.923 55.21 12 50 12c-10.626 0-16.855-1.397-26.66-5.063l-1.767.662C11.991 10.347 6.53 12 0 12v2z' fill='%232d3436' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E"); pointer-events: none; }
+        .halftone-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.05; background-image: var(--halftone); background-size: var(--halftone-size); pointer-events: none; }
+        .big-bg-text { position: absolute; font-size: 15rem; font-weight: bold; color: var(--pop-black); opacity: 0.05; z-index: 1; pointer-events: none; font-family: 'Bangers'; white-space: nowrap; }
+
+        /* --- CONTENT STYLES --- */
+        #hero { background-color: var(--envy-green); align-items: center; text-align: center; }
+        .hero-content { background: white; padding: 50px 80px; border: var(--border-thick); box-shadow: 20px 20px 0px var(--pop-black); position: relative; z-index: 2; transform: rotate(-1deg); }
+        .hero-content h1 { font-size: 8rem; line-height: 0.9; text-shadow: 5px 5px 0px var(--envy-purple); margin-bottom: 20px;}
+        .hero-tag { background: var(--envy-purple); color: white; padding: 10px 20px; font-size: 1.5rem; font-weight: bold; border: 2px solid var(--pop-black); display: inline-block; transform: rotate(2deg); }
+
+        /* Rules */
+        #rules { background-color: var(--envy-purple); }
+        .rules-container { display: flex; gap: 30px; margin-top: 80px; justify-content: center; flex-wrap: wrap; z-index: 2; }
+        .comic-panel { background: white; border: var(--border-thick); padding: 30px; width: 320px; position: relative; box-shadow: 10px 10px 0px rgba(0,0,0,0.5); transition: 0.3s; }
+        .comic-panel h3 { background: var(--pop-yellow); display: inline-block; padding: 5px 15px; border: 2px solid var(--pop-black); position: absolute; top: -20px; left: -10px; font-size: 1.8rem; transform: rotate(-3deg); }
+
+        /* Wall of Fame */
+        #activities { background-color: var(--pop-yellow); }
+        .manga-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 280px); gap: 15px; margin-top: 80px; max-width: 1100px; margin-left: auto; margin-right: auto; padding-right: 40px; }
+        .manga-panel { border: var(--border-thick); background-color: white; overflow: hidden; position: relative; transition: 0.3s; display: block; text-decoration: none; color: inherit; cursor: pointer; }
+        .manga-panel.large { grid-column: span 2; } .manga-panel.tall { grid-row: span 2; }
+        .manga-panel img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(120%); transition: 0.4s; }
+        .manga-panel:hover { transform: translate(-5px, -5px); box-shadow: 10px 10px 0px var(--pop-black); }
+        .manga-panel:hover img { filter: grayscale(0%) contrast(110%); }
+        .panel-tag { position: absolute; bottom: 0; right: 0; background: var(--envy-green); padding: 8px 15px; font-weight: bold; border-top: 3px solid var(--pop-black); border-left: 3px solid var(--pop-black); font-family: 'Bangers'; letter-spacing: 1px; }
+        .click-hint { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; font-family: 'Bangers'; border: 2px solid white; transition: 0.3s; z-index: 10; }
+        .manga-panel:hover .click-hint { transform: translate(-50%, -50%) scale(1); }
+
+        /* Members */
+        #members { background-color: #ecf0f1; }
+        .members-flex { display: flex; justify-content: center; flex-wrap: wrap; gap: 40px; margin-top: 100px; z-index: 2; }
+        .member-pop { text-align: center; position: relative; transition: 0.3s; width: 180px;}
+        .member-pop:hover { transform: translateY(-10px); }
+        .member-img-box { width: 160px; height: 160px; border-radius: 50%; border: 6px solid var(--pop-black); overflow: hidden; background: white; position: relative; box-shadow: 8px 8px 0px var(--pop-black); margin: 0 auto; transition: 0.3s; }
+        .member-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .member-name { background: var(--pop-black); color: var(--pop-yellow); display: inline-block; padding: 5px 20px; margin-top: -20px; position: relative; z-index: 2; border: 3px solid var(--pop-yellow); font-family: 'Bangers'; font-size: 1.5rem; transform: rotate(-2deg); width: 100%; }
+        .member-role { display: inline-block; margin-top: 10px; font-weight: bold; color: white; background: var(--envy-purple); padding: 2px 10px; border-radius: 4px; font-size: 0.9rem; border: 2px solid var(--pop-black); }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            h2.section-title { font-size: 2rem; padding: 5px 15px; }
+            .hero-content h1 { font-size: 4rem; }
+            .manga-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+            .manga-panel.large, .manga-panel.tall { grid-column: span 1; grid-row: span 1; height: 250px; }
+            .big-bg-text { font-size: 5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="horizontal-container">
+        
+        <section class="slide-section" id="hero">
+            <div class="halftone-overlay"></div>
+            <div class="big-bg-text" style="top: 10%; right: -10%;">ENVY FAMILY</div>
+            <div class="hero-content">
+                <h1>ENVY<br>GUILD</h1>
+                <div class="hero-tag">THEY HATE US 'CAUSE THEY AIN'T US</div>
+            </div>
+        </section>
+
+        <section class="slide-section" id="rules">
+            <div class="jp-pattern-overlay"></div>
+            <h2 class="section-title">GUILD RULES</h2>
+            <div class="rules-container">
+                <div class="comic-panel" style="transform: rotate(-2deg);">
+                    <h3>RULE #01</h3>
+                    <p><strong>Respect</strong><br>ห้ามดราม่าภายในกิลด์</p>
+                </div>
+                <div class="comic-panel" style="transform: rotate(2deg); background: #ffeaa7;">
+                    <h3>RULE #02</h3>
+                    <p><strong>Guild War</strong><br>เข้า Discord ทุกครั้ง</p>
+                </div>
+                <div class="comic-panel" style="transform: rotate(-1deg);">
+                    <h3>RULE #03</h3>
+                    <p><strong>Fair Share</strong><br>แบ่งของตามผลงาน</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide-section" id="activities">
+            <div class="halftone-overlay"></div>
+            <h2 class="section-title">WALL OF FAME</h2>
+            <div class="manga-grid">
+                <a href="gvg.html" class="manga-panel large">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e" alt="GVG">
+                    <div class="panel-tag">GVG DOMINATION</div>
+                    <div class="click-hint">READ MORE ↗</div>
+                </a>
+                <a href="woc.html" class="manga-panel">
+                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420" alt="WOC">
+                    <div class="panel-tag" style="background: var(--pop-yellow);">WOC WARRIORS</div>
+                    <div class="click-hint">READ MORE ↗</div>
+                </a>
+                <a href="kvm.html" class="manga-panel tall">
+                    <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc" alt="KVM">
+                    <div class="panel-tag" style="background: var(--envy-purple); color: white;">KVM CHAMPION</div>
+                    <div class="click-hint">READ MORE ↗</div>
+                </a>
+                <a href="roxic.html" class="manga-panel">
+                    <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f" alt="ROXIC">
+                    <div class="panel-tag" style="background: var(--pop-yellow);">ROXIC 2024</div>
+                    <div class="click-hint">READ MORE ↗</div>
+                </a>
+            </div>
+        </section>
+
+        <section class="slide-section" id="members">
+            <div class="jp-pattern-overlay"></div>
+            <div class="big-bg-text" style="bottom: 0; left: -5%;">ENVY SQUAD</div>
+            <h2 class="section-title" style="transform: rotate(2deg);">THE SQUAD</h2>
+            <div class="members-flex" id="member-container"></div>
+        </section>
+
+    </div>
+
+<script>
+        // ==========================================
+        // 1. CONFIG: URL Google Sheet
+        // ==========================================
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR9EFy0C4Somt73nu6A4TlhC51Hyb7j5B080LYZQJ_nLPFdn2mENAFoS8T6_mYyIjExw4Jxp2czcijl/pub?output=csv";
+
+        // ==========================================
+        // 2. MEMBER SYSTEM
+        // ==========================================
+        async function fetchAndRenderMembers() {
+            const container = document.getElementById('member-container');
+            
+            try {
+                const response = await fetch(SHEET_URL);
+                if (!response.ok) throw new Error("Link Error");
+                
+                const data = await response.text();
+                const members = csvToJson(data);
+                
+                if (members.length === 0) throw new Error("No Data");
+                renderMembers(members);
+
+            } catch (error) {
+                console.error("Error:", error);
+                // Demo Data
+                const demoMembers = [
+                    { name: "MASTER_X", role: "LEADER", sex: "Male", img: "https://api.dicebear.com/7.x/avataaars/svg?seed=King" },
+                    { name: "NANON", role: "PRIDE", sex: "Pride", img: "Images/Nanon.jpg" }
+                ];
+                renderMembers(demoMembers);
+            }
+        }
+
+        function csvToJson(csvText) {
+            const lines = csvText.trim().split("\n");
+            const headers = lines[0].trim().split(",").map(h => h.replace(/["\r]/g, '').trim().toLowerCase());
+            
+            const result = [];
+            for (let i = 1; i < lines.length; i++) {
+                if(!lines[i].trim()) continue;
+                const currentline = lines[i].split(",");
+                const obj = {};
+                
+                headers.forEach((header, index) => {
+                    let val = currentline[index] ? currentline[index].replace(/["\r]/g, '').trim() : "";
+                    
+                    if(header.includes('name')) obj.name = val;
+                    else if(header.includes('role')) obj.role = val;
+                    else if(header.includes('sex') || header.includes('gender')) obj.sex = val;
+                    else if(header.includes('img')) obj.img = val;
+                });
+                if(obj.name) result.push(obj);
+            }
+            return result;
+        }
+
+        function renderMembers(guildMembers) {
+            const container = document.getElementById('member-container');
+            const themeColors = ['#00ff88', '#8e44ad', '#f1c40f'];
+            container.innerHTML = ""; 
+
+            guildMembers.forEach((member, index) => {
+                let bgStyle = "";
+                const gender = member.sex ? member.sex.toLowerCase() : "";
+
+                // --- GENDER LOGIC (แก้ไขใหม่) ---
+                if (['male', 'm', 'ชาย'].includes(gender)) {
+                    // สีฟ้า (Male)
+                    bgStyle = "background: #54a0ff; border: 6px solid #2e86de;"; 
+                    
+                } else if (['female', 'f', 'หญิง'].includes(gender)) {
+                    // สีชมพู (Female)
+                    bgStyle = "background: #ff9ff3; border: 6px solid #f368e0;"; 
+                    
+                } else if (gender.includes('pride')) {
+                    // [แก้ใหม่] สีรุ้ง (Pride) แบบทำที่ขอบ (Border Gradient)
+                    // เทคนิค: ใช้ linear-gradient ซ้อนกันเพื่อทำขอบสีรุ้ง
+                    bgStyle = `
+                        border: 6px solid transparent;
+                        background: linear-gradient(white, white) padding-box, 
+                                    linear-gradient(135deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff) border-box;
+                        box-shadow: 0 0 20px rgba(255, 0, 255, 0.5); /* แสงฟุ้งๆ */
+                    `;
+                    
+                } else {
+                    // สีทั่วไป (Theme)
+                    const color = themeColors[index % themeColors.length];
+                    bgStyle = `background: ${color}; border: 6px solid var(--pop-black);`;
+                }
+                
+                const memberHTML = `
+                    <div class="member-pop">
+                        <div class="member-img-box" style="${bgStyle}">
+                            <img src="${member.img}" alt="${member.name}" 
+                                 onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=${member.name}'">
+                        </div>
+                        <div class="member-name">${member.name}</div>
+                        <div class="member-role">${member.role}</div>
+                    </div>
+                `;
+                container.innerHTML += memberHTML;
+            });
+        }
+        
+        fetchAndRenderMembers();
+
+        // --- NAVIGATION ---
+        const slider = document.querySelector('.horizontal-container');
+        let isDown = false; let startX; let scrollLeft;
+        slider.addEventListener('mousedown', (e) => { isDown = true; slider.classList.add('active'); slider.style.scrollSnapType = 'none'; startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft; });
+        slider.addEventListener('mouseleave', () => { if(isDown) { isDown = false; slider.classList.remove('active'); slider.style.scrollSnapType = 'x mandatory'; } });
+        slider.addEventListener('mouseup', () => { isDown = false; slider.classList.remove('active'); slider.style.scrollSnapType = 'x mandatory'; slider.style.scrollBehavior = 'smooth'; setTimeout(() => slider.style.scrollBehavior = 'auto', 500); });
+        slider.addEventListener('mousemove', (e) => { if(!isDown) return; e.preventDefault(); const x = e.pageX - slider.offsetLeft; const walk = (x - startX) * 3; slider.scrollLeft = scrollLeft - walk; });
+        let isThrottled = false;
+        slider.addEventListener('wheel', (evt) => { 
+            evt.preventDefault(); if(isThrottled) return;
+            const dir = evt.deltaY > 0 ? 1 : -1; 
+            slider.scrollTo({ left: (Math.round(slider.scrollLeft / window.innerWidth) + dir) * window.innerWidth, behavior: 'smooth' });
+            isThrottled = true; setTimeout(() => { isThrottled = false; }, 600);
+        }, { passive: false });
+    </script>
+</body>
+</html>
